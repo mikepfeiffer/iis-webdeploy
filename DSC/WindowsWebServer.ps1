@@ -86,7 +86,7 @@
         xWebsite DefaultSite   
         {  
             Ensure          = 'Present'
-            Name            = 'Default Web Site'
+            Name            = 'website'
             PhysicalPath    = 'C:\inetpub\wwwroot' 
             DependsOn       = '[WindowsFeature]WebServerRole'
         }
