@@ -15,15 +15,15 @@
       "metadata": {
         "description": "Password for the Virtual Machine."
       },
-      "defaultValue": "P@ssw0rd2016"
+      "defaultValue": "Pass!Word1"
     },
-    "dnsNameForPublicIP": {
+    "machineName": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 15,
       "metadata": {
-        "description": "Globally unique Name for the Public IP used to access the Virtual Machine."
-      },
-      "defaultValue": "mypip17"
+        "description" : "Name of the Virtual Machine"
+      }
     },
     "windowsOSVersion": {
       "type": "string",
@@ -38,23 +38,24 @@
     }
   },
   "variables": {
+    "dnsNameForPublicIP" : "[concat(parameters('machineName'), 'pip']",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "OSDiskName": "osdiskforwindowssimple",
-    "nicName": "myVMNic",
+    "nicName": "[concat(parameters('machineName'), 'VMNic']",
     "addressPrefix": "192.168.0.0/16",
     "subnetName": "Subnet",
     "subnetPrefix": "192.168.1.0/24",
-    "vhdStorageType": "Premium_LRS",
-    "publicIPAddressName": "myPublicIP",
+    "vhdStorageType": "Standard_LRS",
+    "publicIPAddressName": "[concat(parameters('machineName'), 'pip']",
     "publicIPAddressType": "Dynamic",
     "vhdStorageContainerName": "vhds",
-    "vmName": "IISVM",
-    "vmSize": "Standard_DS2_v2",
-    "virtualNetworkName": "MyVNET",
+    "vmName": "parameters('machineName')",
+    "vmSize": "Standard_B2s",
+    "virtualNetworkName": "[concat(parameters('machineName'), 'VNET']",
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]",
-    "vhdStorageAccountName": "[concat('vhdstorage', uniqueString(resourceGroup().id))]",
+    "vhdStorageAccountName": "[concat(parameters('machineName'), uniqueString(resourceGroup().id))]",
     "diagnosticsStorageAccountName": "[variables('vhdStorageAccountName')]",
     "wadmetricsresourceid": "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
   },
@@ -82,7 +83,7 @@
       "properties": {
         "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
+          "domainNameLabel": "[variables('dnsNameForPublicIP')]"
         }
       }
     },
